@@ -1,31 +1,32 @@
-     subroutine world_splitter() 
-          use inmod
-          include "mpif.h" 
+subroutine world_splitter() 
+use variableMod
+include "mpif.h" 
 
-          nslice=nlimitold/nproc
-          nslice=MAX(nslice,1)
+nslice = nlimitold / nproc
+nslice = max(nslice, 1)
 
-          if(allocated(iaa))deallocate(iaa)
-          if(allocated(ibb))deallocate(ibb)
+if(allocated(iaa)) deallocate(iaa)
+if(allocated(ibb)) deallocate(ibb)
 
-          allocate(iaa(0:nproc-1))
-          allocate(ibb(0:nproc-1))
+allocate(iaa(0:nproc - 1))
+allocate(ibb(0:nproc - 1))
 
-          iover=mod(nlimitold,nproc)
+iover = mod(nlimitold, nproc)
 
-          do i=0,nproc-1
-            iaa(i)=(i*nslice)+1
-            ibb(i)=(i+1)*nslice
-            ibb(i)=ibb(i)+iover
-          end do
+do i = 0, nproc - 1
+  iaa(i) = (i * nslice) + 1
+  ibb(i) = (i + 1) * nslice
+  ibb(i) = ibb(i) + iover
+end do
 
-          icc=abs(ibb(nproc-1)-iaa(nproc-1))+1
+icc = abs(ibb(nproc - 1) - iaa(nproc - 1)) + 1
 
-          if(allocated(nnldr2))deallocate(nnldr2)
-          allocate(nnldr2(iaa(iam):ibb(iam)))
+if(allocated(nnldr2)) deallocate(nnldr2)
 
-          nnldr2(iaa(iam):ibb(iam))=nnldr(iaa(iam):ibb(iam))
+allocate(nnldr2(iaa(iam):ibb(iam)))
 
-          return
+nnldr2(iaa(iam):ibb(iam)) = nnldr(iaa(iam):ibb(iam))
 
-          end
+return
+
+end
